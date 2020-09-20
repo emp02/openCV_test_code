@@ -50,3 +50,19 @@ for r in range(0, 600, 40):
 #show image with psychic forehead rings and box eyes
 cv2.imshow("circles", image)
 cv2.waitKey(0)
+
+#make circular mask centered at forehead
+mask = np.zeros(image.shape[:2], dtype="uint8")
+cv2.circle(mask, (foreheadCenter), 350, white, -1)
+cv2.imshow("Mask", mask)
+
+#apply mask to image
+masked = cv2.bitwise_and(image, image, mask=mask)
+cv2.imshow("mask on image", masked)
+cv2.waitKey(0)
+
+#apply color space + mask to image
+hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)    #color space
+masked = cv2.bitwise_and(hsv, hsv, mask=mask)   #mask
+cv2.imshow("HSV masked", masked)
+cv2.waitKey(0)
