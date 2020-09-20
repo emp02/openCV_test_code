@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 import numpy as np
 import argparse
 import cv2
@@ -65,4 +66,29 @@ cv2.waitKey(0)
 hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)    #color space
 masked = cv2.bitwise_and(hsv, hsv, mask=mask)   #mask
 cv2.imshow("HSV masked", masked)
+cv2.waitKey(0)
+
+#color histograms of face + background(and hands)
+chnls = cv2.split(image)
+print(chnls)
+colors = ("b", "g", "r")
+plt.figure()
+plt.title("Color histogram")
+plt.xlabel("Bins")
+plt.ylabel("num pixels")
+
+#mask of main face + lower face
+#setting up mask
+mask1 = np.zeros(image.shape[:2], dtype="uint8")
+cv2.circle(mask1, (foreheadCenter[0], foreheadCenter[1]+100), 150, white, -1)   #big face part
+cv2.circle(mask1, (foreheadCenter[0], foreheadCenter[1]+200), 105, white, -1)   #small face part
+masked1 = cv2.bitwise_and(image, image, mask=mask1)
+cv2.imshow("maskhistogram", masked1)    #show masked image
+
+for (chnls, color) in zip(chnls, colors):
+    hist = cv2.calcHist([chnls], [0], mask1, [256], [0, 256])   #setting up hist
+    plt.plot(hist, color=color)
+    plt.xlim([0, 256])
+plt.show()
+
 cv2.waitKey(0)
