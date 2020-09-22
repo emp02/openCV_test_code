@@ -10,6 +10,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="image path")
 args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
+image1 = cv2.imread(args["image"]) #another copy for later use
 
 #colors, for convenience
 green = (0, 255, 0)
@@ -86,9 +87,28 @@ masked1 = cv2.bitwise_and(image, image, mask=mask1)
 cv2.imshow("maskhistogram", masked1)    #show masked image
 
 for (chnls, color) in zip(chnls, colors):
-    hist = cv2.calcHist([chnls], [0], mask1, [256], [0, 256])   #setting up hist
+    hist = cv2.calcHist([chnls], [0], mask1, [256], [0, 256])   #setting up histogram
     plt.plot(hist, color=color)
     plt.xlim([0, 256])
 plt.show()
+cv2.waitKey(0)
 
+#blurring
+blurred = np.hstack([cv2.GaussianBlur(masked1, (7, 7), 0)])
+cv2.imshow("blurred", blurred)
+cv2.waitKey(0)
+
+#thresholding time?
+greyImage = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+blurred1 = cv2.GaussianBlur(greyImage, (11, 11), 0) #big blur
+(T, threshInv) = cv2.threshold(blurred1, 80, 200, cv2.THRESH_BINARY_INV)
+#trying different parameters to get the face isolated... not working too well
+cv2.imshow("Threshold Binary Inverse", threshInv)
+cv2.waitKey(0)
+
+#edge detection?
+lap = cv2.Laplacian(threshInv, cv2.CV_64F)  #tried the others too... laplacian was the least cluttered
+#Not sure how to isolate the face since some shadow parts are the same shade as those not on the face
+lap = np.uint8(np.absolute(lap))
+cv2.imshow("Laplacian", lap)
 cv2.waitKey(0)
