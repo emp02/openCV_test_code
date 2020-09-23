@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 import cv2
 
-#python scriptThing.py --image ../../images/thatImage.jpeg
+#python scriptThing.py --image thatImage.jpeg
 
 #get, load image
 ap = argparse.ArgumentParser()
