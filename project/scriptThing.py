@@ -112,3 +112,21 @@ lap = cv2.Laplacian(threshInv, cv2.CV_64F)  #tried the others too... laplacian w
 lap = np.uint8(np.absolute(lap))
 cv2.imshow("Laplacian", lap)
 cv2.waitKey(0)
+
+#with regards to the neck part, did threshold thing with new parameters and transplanted neck/chin part onto greyImage, then did contour
+#seemed to work ok
+
+greyImage1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+blurred2 = cv2.GaussianBlur(greyImage, (5, 5), 0)
+(T, threshInv1) = cv2.threshold(blurred2, 53, 200, cv2.THRESH_BINARY_INV)
+#transplant part of chin/neck that was too similar in color from the threshold thing where I changed the parameters so there was a clear difference
+greyImage1[450:500, 400:440] = threshInv1[450:500, 400:440]
+cv2.imshow("Grey Image with fixed chin", greyImage1)
+cv2.waitKey(0)
+
+#edge detection?
+lap1 = cv2.Laplacian(greyImage1, cv2.CV_64F)  #tried the others too... laplacian was the least cluttered
+#Not sure how to isolate the face since some shadow parts are the same shade as those not on the face
+lap1 = np.uint8(np.absolute(lap1))
+cv2.imshow("Laplacian1", lap1)
+cv2.waitKey(0)
