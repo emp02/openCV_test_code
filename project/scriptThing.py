@@ -1,7 +1,13 @@
+#python 3.8.1
+#matplotlib 3.2.2
+#numpy 1.18.3
+#cv2 4.4.0
+#argparse 1.1
 from matplotlib import pyplot as plt
 import numpy as np
 import argparse
 import cv2
+
 
 #python scriptThing.py --image thatImage.jpeg
 
