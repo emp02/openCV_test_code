@@ -106,7 +106,7 @@ cv2.waitKey(0)
 
 #thresholding time?
 greyImage = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
-blurred1 = cv2.GaussianBlur(greyImage, (11, 11), 0) #big blur
+blurred1 = cv2.GaussianBlur(greyImage, (9, 9), 0) #big blur
 (T, threshInv) = cv2.threshold(blurred1, 80, 200, cv2.THRESH_BINARY_INV)
 #trying different parameters to get the face isolated... not working too well
 cv2.imshow("Threshold Binary Inverse", threshInv)
@@ -135,4 +135,13 @@ lap1 = cv2.Laplacian(greyImage1, cv2.CV_64F)  #tried the others too... laplacian
 #Not sure how to isolate the face since some shadow parts are the same shade as those not on the face
 lap1 = np.uint8(np.absolute(lap1))
 cv2.imshow("Laplacian1", lap1)
+cv2.waitKey(0)
+
+
+#cutting/pasting contour
+lap2 = cv2.Laplacian(threshInv1, cv2.CV_64F)  #tried the others too... laplacian was the least cluttered
+#Not sure how to isolate the face since some shadow parts are the same shade as those not on the face
+lap2 = np.uint8(np.absolute(lap2))
+lap[450:525, 350:440] = lap2[450:525, 350:440]
+cv2.imshow("Laplacian1", lap)
 cv2.waitKey(0)
